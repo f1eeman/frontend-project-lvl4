@@ -1,0 +1,22 @@
+{
+  "name": "@zhanakhmetov/chat",
+  "version": "1.0.0",
+  "description": "chat implies channels and their management, chatting is online within every channel",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/f1eeman/frontend-project-lvl4.git"
+  },
+  "keywords": [
+    "chat"
+  ],
+  "author": "daniyar zhanakhmetov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/f1eeman/frontend-project-lvl4/issues"
+  },
+  "homepage": "https://github.com/f1eeman/frontend-project-lvl4#readme"
+}
