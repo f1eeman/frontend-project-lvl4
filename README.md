@@ -3,6 +3,8 @@
 ### my-chat
 Simplified version of Slack. Chat implies channels and their management, chatting is online within every channel.
 
+[preview](https://immense-cove-55043.herokuapp.com/)
+
 <!-- The technologies used in this project are as follows:
   React
   Redux + Redux Forms
