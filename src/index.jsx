@@ -1,15 +1,27 @@
-import ReactDOM from 'react-dom';
 import React from 'react';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import App from './components/App.jsx';
+import rootReducer from './reducers';
 
-const Channels = ({ props: { channels } }) => (
-  channels.map((channel) => (
-    <p key={channel.id}>{channel.name}</p>
-  ))
-);
+const run = (initState) => {
+  const { channels, messages, currentChannelId } = initState;
+  const preloadedState = {
+    channels,
+    messages,
+    currentChannelId,
+  };
 
-const run = (state) => {
-  ReactDOM.render(
-    <Channels props={state} />,
+  const store = configureStore({
+    reducer: rootReducer,
+    preloadedState,
+  });
+
+  render(
+    <Provider store={store}>
+      <App />
+    </Provider>,
     document.getElementById('chat'),
   );
 };
