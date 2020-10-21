@@ -1,15 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import cn from 'classnames';
 
-const mapStateToProps = (state) => {
-  const { channels, currentChannelId } = state;
-  console.log('currentChannelId', currentChannelId);
-  return { channels, activeChannelId: currentChannelId };
-};
-
-const renderChannelsList = ({ channels, activeChannelId }) => {
-  const b = 4;
+const renderChannelsList = () => {
+  const channels = useSelector((state) => state.channels);
+  const activeChannelId = useSelector((state) => state.currentChannelId);
   return (
     <ul className="nav flex-column nav-pills nav-fill">
       {channels.map((c) => {
@@ -22,8 +17,6 @@ const renderChannelsList = ({ channels, activeChannelId }) => {
           'btn-primary': c.id === activeChannelId,
           'btn-light': c.id !== activeChannelId,
         });
-        console.log(classes);
-        console.log(activeChannelId);
         return (
           <li key={c.id} className="nav-item">
             <button className={classes} type="button">{c.name}</button>
@@ -46,4 +39,4 @@ const Channels = ({ channels, activeChannelId }) => (
   </>
 );
 
-export default connect(mapStateToProps)(Channels);
+export default Channels;

@@ -3,9 +3,11 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import App from './components/App.jsx';
-import rootReducer from './reducers';
+import rootReducer from './slices';
+import getUserName from './cookie.js';
+import Context from './Context.js';
 
-const run = (initState) => {
+const runApp = (initState) => {
   const { channels, messages, currentChannelId } = initState;
   const preloadedState = {
     channels,
@@ -20,10 +22,15 @@ const run = (initState) => {
 
   render(
     <Provider store={store}>
-      <App />
+      <Context.Provider value={{
+        userName: getUserName(),
+      }}
+      >
+        <App />
+      </Context.Provider>
     </Provider>,
     document.getElementById('chat'),
   );
 };
 
-export default run;
+export default runApp;
