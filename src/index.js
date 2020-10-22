@@ -7,9 +7,9 @@ import '../assets/application.scss';
 
 // import faker from 'faker';
 import gon from 'gon';
-import runApp from './index.jsx';
+import io from 'socket.io-client';
+import runApp from './app.jsx';
 // import cookies from 'js-cookie';
-// import io from 'socket.io-client';
 
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
@@ -17,4 +17,8 @@ if (process.env.NODE_ENV !== 'production') {
 
 console.log('it works!');
 console.log('gon', gon);
+const socket = io();
+socket.on('newMessage', ({ data: { attributes } }) => {
+  gon.messages.push(attributes);
+});
 runApp(gon);
