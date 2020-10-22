@@ -16,7 +16,6 @@ const ChatField = () => {
         initialValues={{ text: '' }}
         onSubmit={(values) => {
           const message = { author: userName, text: values.text, channelId: currentChannelId };
-          console.log('chart', message);
           dispatch(actions.addMessage({ currentChannelId, message }));
         }}
       >
