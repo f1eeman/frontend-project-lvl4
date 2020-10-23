@@ -5,7 +5,6 @@ import { actions } from '../slices';
 
 const renderChannelsList = () => {
   const { channelsList, activeChannelId } = useSelector((state) => state.channels);
-  console.log('channelsList', channelsList);
   const dispatch = useDispatch();
   const handleChangeChannel = (id) => () => {
     dispatch(actions.setActiveId({ id }));
@@ -38,21 +37,25 @@ const renderChannelsList = () => {
   );
 };
 
-const Channels = ({ channels, activeChannelId }) => (
-  <>
-    <div className="col-3 border-right">
-      <div className="d-flex mb-2">
-        <span>Channels</span>
-        <button
-          className="ml-auto p-0 btn btn-link"
-          type="button"
-        >
-          +
-        </button>
+const Channels = ({ channels, activeChannelId }) => {
+  const dispatch = useDispatch();
+  return (
+    <>
+      <div className="col-3 border-right">
+        <div className="d-flex mb-2">
+          <span>Channels</span>
+          <button
+            className="ml-auto p-0 btn btn-link"
+            type="button"
+            onClick={() => dispatch(actions.showModal({ type: 'adding', item: null }))}
+          >
+            +
+          </button>
+        </div>
+        {renderChannelsList({ channels, activeChannelId })}
       </div>
-      {renderChannelsList({ channels, activeChannelId })}
-    </div>
-  </>
-);
+    </>
+  );
+};
 
 export default Channels;

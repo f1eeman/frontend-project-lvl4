@@ -14,6 +14,7 @@ const modalsSlice = createSlice({
     showModal(state, action) {
       state.type = action.payload.type;
       state.item = action.payload.item;
+      console.log(state);
     },
     hideModal(state) {
       state.type = null;

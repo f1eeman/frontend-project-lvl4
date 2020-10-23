@@ -1,16 +1,20 @@
 import { combineReducers } from 'redux';
 import channelsReducer, { addChannel, setActiveId } from './channels';
 import messagesReducer, { addMessage } from './messages';
+import modalsReducer, { showModal, hideModal } from './modals';
 
 const actions = {
   setActiveId,
   addChannel,
   addMessage,
+  showModal,
+  hideModal,
 };
 
 const rootReducer = combineReducers({
   channels: channelsReducer,
   messages: messagesReducer,
+  modals: modalsReducer,
 });
 
 export { actions };
