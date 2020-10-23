@@ -8,7 +8,7 @@ import '../assets/application.scss';
 // import faker from 'faker';
 import gon from 'gon';
 import io from 'socket.io-client';
-import runApp from './app.jsx';
+import runApp from './init.jsx';
 // import cookies from 'js-cookie';
 
 if (process.env.NODE_ENV !== 'production') {

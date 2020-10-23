@@ -1,13 +1,18 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import cn from 'classnames';
+import { actions } from '../slices';
 
 const renderChannelsList = () => {
-  const channels = useSelector((state) => state.channels);
-  const activeChannelId = useSelector((state) => state.currentChannelId);
+  const { channelsList, activeChannelId } = useSelector((state) => state.channels);
+  console.log('channelsList', channelsList);
+  const dispatch = useDispatch();
+  const handleChangeChannel = (id) => () => {
+    dispatch(actions.setActiveId({ id }));
+  };
   return (
     <ul className="nav flex-column nav-pills nav-fill">
-      {channels.map((c) => {
+      {channelsList.map((c) => {
         const classes = cn({
           'nav-link': true,
           'btn-block': true,
@@ -19,7 +24,13 @@ const renderChannelsList = () => {
         });
         return (
           <li key={c.id} className="nav-item">
-            <button className={classes} type="button">{c.name}</button>
+            <button
+              className={classes}
+              type="button"
+              onClick={handleChangeChannel(c.id)}
+            >
+              {c.name}
+            </button>
           </li>
         );
       })}
@@ -32,7 +43,12 @@ const Channels = ({ channels, activeChannelId }) => (
     <div className="col-3 border-right">
       <div className="d-flex mb-2">
         <span>Channels</span>
-        <button className="ml-auto p-0 btn btn-link" type="button">+</button>
+        <button
+          className="ml-auto p-0 btn btn-link"
+          type="button"
+        >
+          +
+        </button>
       </div>
       {renderChannelsList({ channels, activeChannelId })}
     </div>

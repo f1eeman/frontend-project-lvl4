@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
-import setActiveIdReducer, { setActiveId } from './activeId';
-import channelsReducer, { addChannel } from './channels';
-import messagesReducer, { addMessage } from './chatField';
+import channelsReducer, { addChannel, setActiveId } from './channels';
+import messagesReducer, { addMessage } from './messages';
 
 const actions = {
   setActiveId,
@@ -11,7 +10,6 @@ const actions = {
 
 const rootReducer = combineReducers({
   channels: channelsReducer,
-  currentChannelId: setActiveIdReducer,
   messages: messagesReducer,
 });
 

@@ -3,25 +3,24 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Form, InputGroup } from 'react-bootstrap';
-import { actions as actionsSlice } from '../slices';
+import { actions as slicesActions } from '../slices';
 import Context from '../Context.js';
 
 const ChatField = () => {
-  const currentChannelId = useSelector((state) => state.currentChannelId);
-  const dispatch = useDispatch();
+  const { activeChannelId } = useSelector((state) => state.channels);
   const { userName } = useContext(Context);
+  const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
       body: '',
-      status: 'sss',
     },
     validationSchema: Yup.object({
       body: Yup.string().required('this field must be required'),
     }),
     onSubmit: (values, actions) => {
-      const message = { author: userName, text: values.body, channelId: currentChannelId };
+      const message = { author: userName, text: values.body, channelId: activeChannelId };
       try {
-        dispatch(actionsSlice.addMessage({ currentChannelId, message }));
+        dispatch(slicesActions.addMessage({ activeChannelId, message }));
         actions.setSubmitting(false);
         actions.resetForm();
       } catch (e) {

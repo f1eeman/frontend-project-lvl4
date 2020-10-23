@@ -10,9 +10,11 @@ import Context from './Context.js';
 const runApp = (initState) => {
   const { channels, messages, currentChannelId } = initState;
   const preloadedState = {
-    channels,
+    channels: {
+      channelsList: channels,
+      activeChannelId: currentChannelId,
+    },
     messages,
-    currentChannelId,
   };
 
   const store = configureStore({

@@ -2,8 +2,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import routes from '../routes.js';
 
-const addMessage = createAsyncThunk('messages/promiseStatus', async ({ currentChannelId, message }) => {
-  const path = routes.channelMessagesPath(currentChannelId);
+const addMessage = createAsyncThunk('messages/promiseStatus', async ({ activeChannelId, message }) => {
+  const path = routes.channelMessagesPath(activeChannelId);
   const responce = await axios.post(
     path, { data: { attributes: message } },
   );
