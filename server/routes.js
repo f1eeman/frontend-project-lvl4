@@ -87,7 +87,7 @@ export default (app, io, defaultState = {}) => {
       const channel = state.channels.find((c) => c.id === channelId);
 
       const { data: { attributes } } = req.body;
-      console.log('attributes', attributes);
+      channel.name = attributes.name;
 
       const data = {
         data: {

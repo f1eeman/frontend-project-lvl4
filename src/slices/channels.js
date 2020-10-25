@@ -15,7 +15,9 @@ const addChannel = createAsyncThunk('channels/add/promiseStatus', async ({ chann
 });
 
 const renameChannel = createAsyncThunk('channels/rename/promiseStatus', async ({ id, name }) => {
+  console.log('id', id);
   const path = routes.channelPath(id);
+  console.log('path', path);
   const responce = await axios.patch(
     path, { data: { attributes: { name } } },
   );
@@ -50,7 +52,7 @@ const channelSlice = createSlice({
     },
     [renameChannel.fulfilled]: (state, { payload }) => {
       const currentChannel = state.channelsList.find(
-        ({ id }) => id !== payload.data.attributes.id,
+        ({ id }) => id === payload.data.attributes.id,
       );
       currentChannel.name = payload.data.attributes.name;
     },

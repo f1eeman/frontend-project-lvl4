@@ -7,6 +7,7 @@ import { actions as slicesActions } from '../../slices';
 
 const Rename = () => {
   const { item } = useSelector((state) => state.modals);
+  console.log('item', item);
   const dispatch = useDispatch();
   const inputRef = useRef();
   useEffect(() => {
