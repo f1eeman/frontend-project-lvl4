@@ -6,21 +6,14 @@ import { actions } from '../../slices';
 const Remove = () => {
   const dispatch = useDispatch();
   const { item: { id: removingId } } = useSelector((state) => state.modals);
-  console.log('removingID', removingId);
   const [show, setShow] = useState(true);
   const handleClose = () => {
     dispatch(actions.hideModal());
     return setShow(false);
   };
   const handleRemoveChannel = (id) => () => {
-    console.log('removingId', id);
-    try {
-      dispatch(actions.removeChannel({ id }));
-      dispatch(actions.hideModal());
-    } catch (e) {
-      const errorMessage = 'error';
-      throw e;
-    }
+    dispatch(actions.removeChannel({ id }));
+    dispatch(actions.hideModal());
   };
 
   return (

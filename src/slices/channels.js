@@ -14,10 +14,16 @@ const addChannel = createAsyncThunk('channels/add/promiseStatus', async ({ chann
   return responce.data;
 });
 
+const renameChannel = createAsyncThunk('channels/add/promiseStatus', async ({ id, name }) => {
+  const path = routes.channelPath(id);
+  const responce = await axios.patch(
+    path, { data: { attributes: name } },
+  );
+  return responce.data;
+});
+
 const removeChannel = createAsyncThunk('channels/remove/promiseStatus', async ({ id }) => {
-  console.log('id', id);
-  const responce = await axios.delete(routes.channelPath(id));
-  console.log('responce', responce);
+  await axios.delete(routes.channelPath(id));
   return { id };
 });
 
@@ -39,15 +45,13 @@ const channelSlice = createSlice({
       state.activeChannelId = action.payload.data.attributes.id;
     },
     [removeChannel.fulfilled]: (state, { payload }) => {
-      console.log('payload.id', payload.id);
-      console.log('payload', payload);
       state.channelsList = state.channelsList.filter(({ id }) => id !== payload.id);
       state.activeChannelId = 1;
     },
   },
 });
 
-export { addChannel, removeChannel };
+export { addChannel, removeChannel, renameChannel };
 export const { setActiveId } = channelSlice.actions;
 
 export default channelSlice.reducer;

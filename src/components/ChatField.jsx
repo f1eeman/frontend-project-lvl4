@@ -32,7 +32,6 @@ const ChatField = () => {
   const inputRef = useRef();
   useEffect(() => {
     inputRef.current.focus();
-    console.log('!!!!!!!');
   }, [activeChannelId]);
   return (
     <div className="mt-auto">

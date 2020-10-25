@@ -21,7 +21,10 @@ const Add = () => {
       body: '',
     },
     validationSchema: Yup.object({
-      body: Yup.string().required('this field must be required'),
+      body: Yup.string()
+        .min(3, 'There should be 3 to 15 characters')
+        .max(15, 'There should be 3 to 15 characters')
+        .required('this field must be required'),
     }),
     onSubmit: (values, actions) => {
       const channel = { name: values.body };

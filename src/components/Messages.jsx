@@ -5,6 +5,7 @@ import Context from '../Context.js';
 const Messages = () => {
   const { userName } = useContext(Context);
   const messages = useSelector((state) => state.messages);
+  console.log('msgs', messages);
   const { activeChannelId } = useSelector((state) => state.channels);
   const filteredMessages = messages.filter(({ channelId }) => channelId === activeChannelId);
 

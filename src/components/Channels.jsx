@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import cn from 'classnames';
 import { Dropdown, ButtonGroup, Button } from 'react-bootstrap';
@@ -32,6 +32,9 @@ const renderDropdownButton = ({
   activeChannelId,
   handleChangeActiveChannel,
   handleShowRemoveModal,
+  handleShowRenameModal,
+  show,
+  handleShowMenu,
 }) => {
   const variant = channel.id === activeChannelId ? 'primary' : 'light';
   const buttonClasses = cn({
@@ -51,22 +54,24 @@ const renderDropdownButton = ({
       >
         {channel.name}
       </Button>
-      <Dropdown.Toggle variant={variant} className={toggleClasses} split />
-      <Dropdown.Menu>
-        <Dropdown.Item eventKey="2" onSelect={handleShowRemoveModal(channel)}>Remove</Dropdown.Item>
-        <Dropdown.Item eventKey="3">Rename</Dropdown.Item>
+      <Dropdown.Toggle onClick={handleShowMenu} variant={variant} className={toggleClasses} split />
+      <Dropdown.Menu show={show}>
+        <Dropdown.Item eventKey="1" onSelect={handleShowRemoveModal(channel)}>Remove</Dropdown.Item>
+        <Dropdown.Item eventKey="2" onSelect={handleShowRenameModal(channel)}>Rename</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   );
 };
 
-const renderChannelsList = ({ channelsList, activeChannelId }) => {
-  const dispatch = useDispatch();
+const renderChannelsList = ({ channelsList, activeChannelId, dispatch, handleShowMenu, show }) => {
   const handleChangeActiveChannel = (id) => () => {
     dispatch(actions.setActiveId({ id }));
   };
   const handleShowRemoveModal = (channel) => () => {
     dispatch(actions.showModal({ type: 'removing', item: channel }));
+  };
+  const handleShowRenameModal = (channel) => () => {
+    dispatch(actions.showModal({ type: 'renaming', item: channel }));
   };
   return (
     <ul className="nav flex-column nav-pills nav-fill">
@@ -74,10 +79,16 @@ const renderChannelsList = ({ channelsList, activeChannelId }) => {
         <li key={channel.id} className="nav-item">
           {channel.removable ? (
             renderDropdownButton({
-              channel, activeChannelId, handleChangeActiveChannel, handleShowRemoveModal,
+              channel,
+              activeChannelId,
+              handleChangeActiveChannel,
+              handleShowRemoveModal,
+              handleShowRenameModal,
+              handleShowMenu,
+              show,
             })) : (
             renderSimpleButton({
-              channel, activeChannelId, handleChangeActiveChannel, handleShowRemoveModal,
+              channel, activeChannelId, handleChangeActiveChannel,
             })
           )}
         </li>
@@ -89,6 +100,11 @@ const renderChannelsList = ({ channelsList, activeChannelId }) => {
 const Channels = () => {
   const { channelsList, activeChannelId } = useSelector((state) => state.channels);
   const dispatch = useDispatch();
+  const [show, setShow] = useState(false);
+  const handleShowMenu = () => {
+    console.log('show', show);
+    return setShow(true);
+  };
   return (
     <>
       <div className="col-3 border-right">
@@ -102,7 +118,7 @@ const Channels = () => {
             +
           </Button>
         </div>
-        {renderChannelsList({ channelsList, activeChannelId })}
+        {renderChannelsList({ channelsList, activeChannelId, dispatch, show, handleShowMenu })}
       </div>
     </>
   );
