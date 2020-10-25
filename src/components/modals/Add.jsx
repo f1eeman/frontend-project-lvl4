@@ -2,11 +2,20 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Form, Modal } from 'react-bootstrap';
+import { Form, Modal, Button } from 'react-bootstrap';
 import { actions as slicesActions } from '../../slices';
 
 const Add = () => {
   const dispatch = useDispatch();
+  const inputRef = useRef();
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
+  const [show, setShow] = useState(true);
+  const handleClose = () => {
+    dispatch(slicesActions.hideModal());
+    return setShow(false);
+  };
   const formik = useFormik({
     initialValues: {
       body: '',
@@ -27,17 +36,12 @@ const Add = () => {
       }
     },
   });
-  const inputRef = useRef(null);
-  useEffect(() => {
-    inputRef.current.focus();
-  });
-  const [show, setShow] = useState(true);
-  const handleClose = () => setShow(false);
+
   return (
     <>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Add</Modal.Title>
+          <Modal.Title>Add channel</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={formik.handleSubmit}>
@@ -51,13 +55,13 @@ const Add = () => {
                 disabled={formik.isSubmitting}
               />
             </Form.Group>
-            <button
-              className="btn btn-primary"
-              type="submit"
-              disabled={formik.isSubmitting}
-            >
-              Add
-            </button>
+            {formik.errors.body ? (
+              <div className="d-block mb-2 invalid-feedback">{formik.errors.body}</div>
+            ) : null}
+            <div className="d-flex justify-content-end">
+              <Button className="mr-2" variant="secondary" onClick={handleClose}>Cancel</Button>
+              <Button variant="primary" type="submit" disabled={formik.isSubmitting}>Add</Button>
+            </div>
           </Form>
         </Modal.Body>
       </Modal>

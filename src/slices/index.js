@@ -1,11 +1,12 @@
 import { combineReducers } from 'redux';
-import channelsReducer, { addChannel, setActiveId } from './channels';
+import channelsReducer, { addChannel, removeChannel, setActiveId } from './channels';
 import messagesReducer, { addMessage } from './messages';
 import modalsReducer, { showModal, hideModal } from './modals';
 
 const actions = {
   setActiveId,
   addChannel,
+  removeChannel,
   addMessage,
   showModal,
   hideModal,

@@ -10,14 +10,12 @@ const renderModal = ({ modalInfo }) => {
     return null;
   }
   const Component = getModal(modalInfo.type);
-  console.log('modalInfo.type', modalInfo.type);
-  console.log('Component', Component);
   return <Component />;
 };
 
 const App = () => {
   const modalInfo = useSelector((state) => state.modals);
-  console.log(modalInfo);
+  console.log('modalInfo', modalInfo);
   return (
     <div className="row h-100 pb-3">
       <Channels />

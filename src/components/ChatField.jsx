@@ -29,10 +29,11 @@ const ChatField = () => {
       }
     },
   });
-  const inputRef = useRef(null);
+  const inputRef = useRef();
   useEffect(() => {
     inputRef.current.focus();
-  });
+    console.log('!!!!!!!');
+  }, [activeChannelId]);
   return (
     <div className="mt-auto">
       <Form onSubmit={formik.handleSubmit}>
