@@ -10,7 +10,7 @@ const Rename = () => {
   const dispatch = useDispatch();
   const inputRef = useRef();
   useEffect(() => {
-    inputRef.current.focus();
+    inputRef.current.select();
   }, []);
   const [show, setShow] = useState(true);
   const handleClose = () => {
@@ -28,11 +28,8 @@ const Rename = () => {
         .required('this field must be required'),
     }),
     onSubmit: (values, actions) => {
-      const channel = { name: values.body };
       try {
-        dispatch(slicesActions.removeChannel({ channel }));
-        actions.setSubmitting(false);
-        actions.resetForm();
+        dispatch(slicesActions.renameChannel({ id: item.id, name: values.body }));
         dispatch(slicesActions.hideModal());
       } catch (e) {
         actions.setErrors({ body: 'Something wrong, please try again' });

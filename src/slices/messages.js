@@ -18,20 +18,11 @@ const chatFieldSlice = createSlice({
   },
   extraReducers: {
     [addMessage.fulfilled]: (state, action) => {
-      console.log('messages b11efore', state);
       state.push({ ...action.payload.data.attributes });
-      console.log('messages a11fter', state);
     },
-    [removeChannel.fulfilled]: (state, { payload }) => {
-      console.log('payload', payload);
-      console.log('messages before', state);
-      state = state.filter(({ channelId }) => {
-        console.log(channelId);
-        return channelId !== payload.id;
-      });
-      console.log('messages after', state);
-      return state;
-    },
+    [removeChannel.fulfilled]: (state, { payload }) => (
+      state.filter(({ channelId }) => channelId !== payload.id)
+    ),
   },
 });
 
