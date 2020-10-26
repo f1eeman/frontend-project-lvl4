@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
+import Rollbar from 'rollbar';
 import App from './components/App.jsx';
 import rootReducer from './slices';
 import getUserName from './cookie.js';
@@ -15,6 +16,11 @@ const runApp = (initState) => {
       activeChannelId: currentChannelId,
     },
     messages,
+    rollbar: new Rollbar({
+      accessToken: '940bc68f1a234163a90fc446b93f6850',
+      captureUncaught: true,
+      captureUnhandledRejections: true,
+    }),
   };
 
   const store = configureStore({

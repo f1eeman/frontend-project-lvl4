@@ -1,4 +1,4 @@
-// @ts-check
+// @ts-check-ignore
 
 import 'regenerator-runtime/runtime';
 import path from 'path';

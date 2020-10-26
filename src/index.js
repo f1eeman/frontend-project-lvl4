@@ -1,4 +1,4 @@
-// @ts-check
+// @ts-check-ignore
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -20,5 +20,8 @@ console.log('gon', gon);
 const socket = io();
 socket.on('newMessage', ({ data: { attributes } }) => {
   gon.messages.push(attributes);
+});
+socket.on('newChannel', ({ data: { attributes } }) => {
+  gon.channels.push(attributes);
 });
 runApp(gon);
