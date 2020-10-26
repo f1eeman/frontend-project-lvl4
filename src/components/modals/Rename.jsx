@@ -3,11 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Form, Modal, Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { actions as slicesActions } from '../../slices';
 
 const Rename = () => {
+  const { t } = useTranslation();
   const { item } = useSelector((state) => state.modals);
-  console.log('item', item);
   const dispatch = useDispatch();
   const inputRef = useRef();
   useEffect(() => {
@@ -24,16 +25,16 @@ const Rename = () => {
     },
     validationSchema: Yup.object({
       body: Yup.string()
-        .min(3, 'There should be 3 to 15 characters')
-        .max(15, 'There should be 3 to 15 characters')
-        .required('this field must be required'),
+        .min(3, t('forms.length'))
+        .max(15, t('forms.length'))
+        .required(t('forms.required')),
     }),
     onSubmit: (values, actions) => {
       try {
         dispatch(slicesActions.renameChannel({ id: item.id, name: values.body }));
         dispatch(slicesActions.hideModal());
       } catch (e) {
-        actions.setErrors({ body: 'Something wrong, please try again' });
+        actions.setErrors({ body: t('networkError') });
         throw e;
       }
     },
@@ -43,7 +44,7 @@ const Rename = () => {
     <>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Rename channel</Modal.Title>
+          <Modal.Title>{t('modals.renameChannel.title')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={formik.handleSubmit}>
@@ -61,8 +62,8 @@ const Rename = () => {
               <div className="d-block mb-2 invalid-feedback">{formik.errors.body}</div>
             ) : null}
             <div className="d-flex justify-content-end">
-              <Button className="mr-2" variant="secondary" onClick={handleClose}>Cancel</Button>
-              <Button variant="primary" type="submit" disabled={formik.isSubmitting}>Rename</Button>
+              <Button className="mr-2" variant="secondary" onClick={handleClose}>{t('modals.renameChannel.cancel')}</Button>
+              <Button variant="primary" type="submit" disabled={formik.isSubmitting}>{t('modals.renameChannel.rename')}</Button>
             </div>
           </Form>
         </Modal.Body>

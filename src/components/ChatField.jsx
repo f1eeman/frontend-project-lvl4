@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Form, InputGroup } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { actions as slicesActions } from '../slices';
 import Context from '../Context.js';
 
@@ -10,12 +11,13 @@ const ChatField = () => {
   const { activeChannelId } = useSelector((state) => state.channels);
   const { userName } = useContext(Context);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const formik = useFormik({
     initialValues: {
       body: '',
     },
     validationSchema: Yup.object({
-      body: Yup.string().required('this field must be required'),
+      body: Yup.string().required(t('forms.required')),
     }),
     onSubmit: (values, actions) => {
       const message = { author: userName, text: values.body, channelId: activeChannelId };
@@ -24,7 +26,7 @@ const ChatField = () => {
         actions.setSubmitting(false);
         actions.resetForm();
       } catch (e) {
-        actions.setErrors({ body: 'Something wrong, please try again' });
+        actions.setErrors({ body: t('networkError') });
         throw e;
       }
     },
@@ -51,10 +53,9 @@ const ChatField = () => {
               className="btn btn-primary"
               aria-label="submit"
               type="submit"
-              value="Submit"
               disabled={formik.isSubmitting}
             >
-              Submit
+              {t('chatField.submit')}
             </button>
             {formik.errors.body ? (
               <div className="d-block invalid-feedback">{formik.errors.body}</div>

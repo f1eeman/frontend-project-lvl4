@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import cn from 'classnames';
+import { useTranslation } from 'react-i18next';
 import {
   ButtonGroup,
   Button,
@@ -108,11 +109,12 @@ const renderChannelsList = ({ channelsList, activeChannelId, dispatch }) => {
 const Channels = () => {
   const { channelsList, activeChannelId } = useSelector((state) => state.channels);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   return (
     <>
       <div className="col-3 border-right">
         <div className="d-flex mb-2">
-          <span>Channels</span>
+          <span>{t('channelListTitle')}</span>
           <Button
             className="ml-auto p-0"
             variant="link"

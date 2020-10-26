@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Modal, Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { actions } from '../../slices';
 
 const Remove = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { item: { id: removingId } } = useSelector((state) => state.modals);
   const [show, setShow] = useState(true);
@@ -20,14 +22,14 @@ const Remove = () => {
     <>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Remove Channel</Modal.Title>
+          <Modal.Title>{t('modals.removeChannel.title')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure?
+          {t('modals.removeChannel.question')}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>Cancel</Button>
-          <Button variant="primary" onClick={handleRemoveChannel(removingId)}>Remove</Button>
+          <Button variant="secondary" onClick={handleClose}>{t('modals.removeChannel.cancel')}</Button>
+          <Button variant="primary" onClick={handleRemoveChannel(removingId)}>{t('modals.removeChannel.remove')}</Button>
         </Modal.Footer>
       </Modal>
     </>
