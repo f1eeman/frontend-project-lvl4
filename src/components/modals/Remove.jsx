@@ -29,7 +29,7 @@ const Remove = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>{t('modals.removeChannel.cancel')}</Button>
-          <Button variant="primary" onClick={handleRemoveChannel(removingId)}>{t('modals.removeChannel.remove')}</Button>
+          <Button variant="danger" onClick={handleRemoveChannel(removingId)}>{t('modals.removeChannel.remove')}</Button>
         </Modal.Footer>
       </Modal>
     </>

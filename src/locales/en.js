@@ -27,6 +27,7 @@ const en = {
       length: 'there should be 3 to 15 characters',
     },
     networkError: 'Something\'s has gone run. Please, try again',
+    loading: ' Loading',
   },
 };
 

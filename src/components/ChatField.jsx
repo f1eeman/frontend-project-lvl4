@@ -2,10 +2,23 @@ import React, { useContext, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Form, InputGroup } from 'react-bootstrap';
+import { Form, InputGroup, Spinner } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { actions as slicesActions } from '../slices';
 import Context from '../Context.js';
+
+const renderSpinner = (text) => (
+  <>
+    <Spinner
+      as="span"
+      animation="grow"
+      size="sm"
+      role="status"
+      aria-hidden="true"
+    />
+    {text}
+  </>
+);
 
 const ChatField = () => {
   const { activeChannelId } = useSelector((state) => state.channels);
@@ -30,6 +43,8 @@ const ChatField = () => {
         throw e;
       }
     },
+    validateOnBlur: false,
+    validateOnChange: false,
   });
   const inputRef = useRef();
   useEffect(() => {
@@ -55,11 +70,11 @@ const ChatField = () => {
               type="submit"
               disabled={formik.isSubmitting}
             >
-              {t('chatField.submit')}
+              {formik.isSubmitting ? renderSpinner(t('loading')) : t('chatField.submit')}
             </button>
-            {formik.errors.body ? (
+            {formik.errors.body && (
               <div className="d-block invalid-feedback">{formik.errors.body}</div>
-            ) : null}
+            )}
           </InputGroup>
         </Form.Group>
       </Form>
