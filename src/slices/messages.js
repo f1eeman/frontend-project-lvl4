@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+import { omitBy } from 'lodash';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import routes from '../routes.js';
@@ -11,21 +13,21 @@ const addMessage = createAsyncThunk('messages/promiseStatus', async ({ activeCha
   return responce.data;
 });
 
-const chatFieldSlice = createSlice({
+const messagesSlice = createSlice({
   name: 'messages',
-  initialState: [],
+  initialState: {},
   reducers: {
   },
   extraReducers: {
-    [addMessage.fulfilled]: (state, action) => {
-      state.push({ ...action.payload.data.attributes });
+    [addMessage.fulfilled]: (state, { payload: { data } }) => {
+      state[data.id] = data.attributes;
     },
     [removeChannel.fulfilled]: (state, { payload }) => (
-      state.filter(({ channelId }) => channelId !== payload.id)
+      omitBy(state, ({ channelId }) => channelId === payload.id)
     ),
   },
 });
 
 export { addMessage };
 
-export default chatFieldSlice.reducer;
+export default messagesSlice.reducer;

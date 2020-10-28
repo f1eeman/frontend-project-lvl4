@@ -10,6 +10,7 @@ module.exports = {
   entry: './src/index.js',
   externals: {
     gon: 'gon',
+    config: 'config',
   },
   resolve: {
     extensions: ['.js', '.jsx'],

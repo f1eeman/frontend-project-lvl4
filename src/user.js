@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie';
 import faker from 'faker';
 
-const getUserName = () => {
+const setUserName = () => {
   if (!Cookies.get('userName')) {
     Cookies.set(
       'userName', faker.internet.userName(), { expires: 1 },
@@ -11,4 +11,4 @@ const getUserName = () => {
   return userName;
 };
 
-export default getUserName;
+export default setUserName;

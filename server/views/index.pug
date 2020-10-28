@@ -5,6 +5,7 @@ html.h-100(lang="en")
     link(href=assetPath('main.css') rel="stylesheet")
     script.
       var gon = !{JSON.stringify(gon)};
+      var config = !{JSON.stringify({ rollbar_client_token: process.env.ROLLBAR_TOKEN })};
   body.d-flex.flex-column.h-100
     nav.navbar.navbar-expand-lg.navbar-light.bg-faded
       a.navbar-brand(href="/") Chat
