@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import Rollbar from 'rollbar';
 import io from 'socket.io-client';
+import config from 'config';
 import App from './components/App.jsx';
 import setUserName from './user.js';
 import Context from './Context.js';
@@ -14,7 +15,7 @@ const runApp = (initState) => {
   initI18n();
   // eslint-disable-next-line no-new
   new Rollbar({
-    accessToken: '940bc68f1a234163a90fc446b93f6850',
+    accessToken: config.rollbar_client_token,
     captureUncaught: true,
     captureUnhandledRejections: true,
   });
