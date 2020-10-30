@@ -1,34 +1,48 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import Context from '../Context.js';
 
 const Messages = () => {
   const { userName } = useContext(Context);
-  const messages = useSelector((state) => state.messages);
-  const { activeChannelId } = useSelector((state) => state.channels);
-  const filteredMessages = messages.filter(({ channelId }) => channelId === activeChannelId);
+  const messagesIds = useSelector((state) => state.messages.allIds);
+  const messagesById = useSelector((state) => state.messages.byId);
+  const messages = messagesIds.map((id) => messagesById[id]);
+  const activeChannelId = useSelector((state) => state.channels.activeChannelId);
+  const messagesOfActiveChannel = messages.filter(({ channelId }) => channelId === activeChannelId);
+  const messagesBox = useRef(null);
 
   useEffect(() => {
-    if (filteredMessages.length === 0) {
+    if (messagesOfActiveChannel.length === 0) {
       return null;
     }
-    const authorOfLastMessage = filteredMessages[filteredMessages.length - 1].author;
+    const lastMessage = messagesOfActiveChannel[messagesOfActiveChannel.length - 1];
+    const { author: authorOfLastMessage } = lastMessage;
     if (authorOfLastMessage === userName) {
-      const messagesBox = document.getElementById('messages-box');
-      messagesBox.scrollTo(0, messagesBox.scrollHeight);
+      messagesBox.current.scrollTo(0, messagesBox.current.scrollHeight);
     }
     return null;
   }, [messages]);
 
+  const renderMessages = () => {
+    if (messagesOfActiveChannel.length === 0) {
+      return null;
+    }
+    return (
+      <>
+        {messagesOfActiveChannel.map((m) => (
+          <p key={m.id}>
+            <b>{m.author}</b>
+            {':'}
+            {m.text}
+          </p>
+        ))}
+      </>
+    );
+  };
+
   return (
-    <div id="messages-box" className="chat-messages overflow-auto mb-3">
-      {filteredMessages.length > 0 && filteredMessages.map((m) => (
-        <p key={m.id}>
-          <b>{m.author}</b>
-          {':'}
-          {m.text}
-        </p>
-      ))}
+    <div id="messages-box" ref={messagesBox} className="chat-messages overflow-auto mb-3">
+      {renderMessages()}
     </div>
   );
 };

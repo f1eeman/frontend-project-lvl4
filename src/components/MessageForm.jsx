@@ -1,26 +1,15 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Form, InputGroup, Spinner } from 'react-bootstrap';
+import { Form, InputGroup, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { actions as slicesActions } from '../slices';
 import Context from '../Context.js';
+import Spinner from './Spinner.jsx';
 
-const renderSpinner = (text) => (
-  <>
-    <Spinner
-      as="span"
-      animation="grow"
-      size="sm"
-      role="status"
-      aria-hidden="true"
-    />
-    {text}
-  </>
-);
-
-const ChatField = () => {
+const MessageForm = () => {
   const { activeChannelId } = useSelector((state) => state.channels);
   const { userName } = useContext(Context);
   const dispatch = useDispatch();
@@ -32,10 +21,13 @@ const ChatField = () => {
     validationSchema: Yup.object({
       body: Yup.string().required(t('forms.required')),
     }),
-    onSubmit: (values, actions) => {
-      const message = { author: userName, text: values.body, channelId: activeChannelId };
+    onSubmit: async (values, actions) => {
+      const message = { author: userName, text: values.body };
       try {
-        dispatch(slicesActions.addMessage({ activeChannelId, message }));
+        const resultAction = await dispatch(
+          slicesActions.asyncAddMessage({ activeChannelId, message }),
+        );
+        unwrapResult(resultAction);
         actions.setSubmitting(false);
         actions.resetForm();
       } catch (e) {
@@ -50,6 +42,21 @@ const ChatField = () => {
   useEffect(() => {
     inputRef.current.focus();
   }, [activeChannelId]);
+
+  const renderButton = () => (
+    <Button variant="primary" type="submit" disabled={formik.isSubmitting}>
+      {formik.isSubmitting ? <Spinner text={(t('loading'))} /> : t('chatField.submit')}
+    </Button>
+  );
+
+  const renderFeedBack = () => (
+    <>
+      {formik.errors.body && (
+        <div className="d-block invalid-feedback">{formik.errors.body}</div>
+      )}
+    </>
+  );
+
   return (
     <div className="mt-auto">
       <Form onSubmit={formik.handleSubmit}>
@@ -64,17 +71,8 @@ const ChatField = () => {
               value={formik.values.body}
               disabled={formik.isSubmitting}
             />
-            <button
-              className="btn btn-primary"
-              aria-label="submit"
-              type="submit"
-              disabled={formik.isSubmitting}
-            >
-              {formik.isSubmitting ? renderSpinner(t('loading')) : t('chatField.submit')}
-            </button>
-            {formik.errors.body && (
-              <div className="d-block invalid-feedback">{formik.errors.body}</div>
-            )}
+            {renderButton()}
+            {renderFeedBack()}
           </InputGroup>
         </Form.Group>
       </Form>
@@ -82,4 +80,4 @@ const ChatField = () => {
   );
 };
 
-export default ChatField;
+export default MessageForm;

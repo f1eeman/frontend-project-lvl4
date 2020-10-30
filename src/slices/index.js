@@ -3,17 +3,25 @@ import channelsReducer, {
   addChannel,
   removeChannel,
   renameChannel,
-  setActiveId,
+  asyncAddChannel,
+  asyncRemoveChannel,
+  asyncRenameChannel,
+  setActiveIdOfChannel,
 } from './channels';
-import messagesReducer, { addMessage } from './messages';
+import messagesReducer, { addMessage, deleteMessages, asyncAddMessage } from './messages';
 import modalsReducer, { showModal, hideModal } from './modals';
 
 const actions = {
-  setActiveId,
+  setActiveIdOfChannel,
   addChannel,
   removeChannel,
   renameChannel,
+  asyncAddChannel,
+  asyncRemoveChannel,
+  asyncRenameChannel,
   addMessage,
+  asyncAddMessage,
+  deleteMessages,
   showModal,
   hideModal,
 };

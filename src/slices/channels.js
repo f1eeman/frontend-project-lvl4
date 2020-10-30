@@ -1,3 +1,4 @@
+import { omit, without } from 'lodash';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import routes from '../routes.js';
@@ -6,25 +7,21 @@ import routes from '../routes.js';
 eslint no-param-reassign:["error", { "props": true, "ignorePropertyModificationsFor": ["state"] }]
 */
 
-const addChannel = createAsyncThunk('channels/add/promiseStatus', async ({ channel }) => {
+const asyncAddChannel = createAsyncThunk('addChannel', async ({ channel }) => {
   const path = routes.channelsPath();
-  const responce = await axios.post(
+  await axios.post(
     path, { data: { attributes: channel } },
   );
-  return responce.data;
 });
 
-const renameChannel = createAsyncThunk('channels/rename/promiseStatus', async ({ id, name }) => {
-  console.log('id', id);
+const asyncRenameChannel = createAsyncThunk('renameChannel', async ({ id, name }) => {
   const path = routes.channelPath(id);
-  console.log('path', path);
-  const responce = await axios.patch(
+  await axios.patch(
     path, { data: { attributes: { name } } },
   );
-  return responce.data;
 });
 
-const removeChannel = createAsyncThunk('channels/remove/promiseStatus', async ({ id }) => {
+const asyncRemoveChannel = createAsyncThunk('removeChannel', async ({ id }) => {
   await axios.delete(routes.channelPath(id));
   return { id };
 });
@@ -32,34 +29,34 @@ const removeChannel = createAsyncThunk('channels/remove/promiseStatus', async ({
 const channelSlice = createSlice({
   name: 'channels',
   initialState: {
-    channelsList: [],
+    byId: {},
+    allIds: [],
     activeChannelId: null,
   },
   reducers: {
-    setActiveId(state, action) {
-      state.activeChannelId = action.payload.id;
-      return state;
+    addChannel(state, { payload: { data: { id, attributes } } }) {
+      state.byId[id] = attributes;
+      state.allIds.push(id);
+      state.activeChannelId = id;
     },
-  },
-  extraReducers: {
-    [addChannel.fulfilled]: (state, action) => {
-      state.channelsList.push({ ...action.payload.data.attributes });
-      state.activeChannelId = action.payload.data.attributes.id;
-    },
-    [removeChannel.fulfilled]: (state, { payload }) => {
-      state.channelsList = state.channelsList.filter(({ id }) => id !== payload.id);
+    removeChannel(state, { payload: { data: { id } } }) {
+      state.byId = omit(state.byId, id);
+      state.allIds = without(state.allIds, id);
       state.activeChannelId = 1;
     },
-    [renameChannel.fulfilled]: (state, { payload }) => {
-      const currentChannel = state.channelsList.find(
-        ({ id }) => id === payload.data.attributes.id,
-      );
-      currentChannel.name = payload.data.attributes.name;
+    renameChannel(state, { payload: { data: { id, attributes } } }) {
+      const currentChannel = state.byId[id];
+      currentChannel.name = attributes.name;
+    },
+    setActiveIdOfChannel(state, { payload: { id } }) {
+      state.activeChannelId = id;
     },
   },
 });
 
-export { addChannel, removeChannel, renameChannel };
-export const { setActiveId } = channelSlice.actions;
+export { asyncAddChannel, asyncRemoveChannel, asyncRenameChannel };
+export const {
+  addChannel, removeChannel, renameChannel, setActiveIdOfChannel,
+} = channelSlice.actions;
 
 export default channelSlice.reducer;

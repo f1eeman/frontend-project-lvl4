@@ -1,8 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import Channels from './Channels';
-import Messages from './Messages';
-import ChatField from './ChatField';
+import Channels from './Channels.jsx';
+import Messages from './Messages.jsx';
+import MessageForm from './MessageForm.jsx';
 import getModal from './modals';
 
 const renderModal = ({ modalInfo }) => {
@@ -21,7 +21,7 @@ const App = () => {
       <div className="col h-100">
         <div className="d-flex flex-column h-100">
           <Messages />
-          <ChatField />
+          <MessageForm />
         </div>
       </div>
       {renderModal({ modalInfo })}

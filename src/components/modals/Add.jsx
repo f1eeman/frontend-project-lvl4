@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Form, Modal, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { actions as slicesActions } from '../../slices';
+import Spinner from '../Spinner.jsx';
 
 const Add = () => {
   const { t } = useTranslation();
@@ -28,10 +30,11 @@ const Add = () => {
         .max(15, t('forms.length'))
         .required(t('forms.required')),
     }),
-    onSubmit: (values, actions) => {
+    onSubmit: async (values, actions) => {
       const channel = { name: values.body };
       try {
-        dispatch(slicesActions.addChannel({ channel }));
+        const resultAction = await dispatch(slicesActions.asyncAddChannel({ channel }));
+        unwrapResult(resultAction);
         actions.setSubmitting(false);
         actions.resetForm();
         dispatch(slicesActions.hideModal());
@@ -41,6 +44,20 @@ const Add = () => {
       }
     },
   });
+
+  const renderAddButton = () => (
+    <Button variant="primary" type="submit" disabled={formik.isSubmitting}>
+      {formik.isSubmitting ? <Spinner text={(t('loading'))} /> : t('modals.addChannel.add')}
+    </Button>
+  );
+
+  const renderFeedBack = () => (
+    <>
+      {formik.errors.body && (
+        <div className="d-block mb-2 invalid-feedback">{formik.errors.body}</div>
+      )}
+    </>
+  );
 
   return (
     <>
@@ -60,12 +77,10 @@ const Add = () => {
                 disabled={formik.isSubmitting}
               />
             </Form.Group>
-            {formik.errors.body ? (
-              <div className="d-block mb-2 invalid-feedback">{formik.errors.body}</div>
-            ) : null}
+            {renderFeedBack()}
             <div className="d-flex justify-content-end">
               <Button className="mr-2" variant="secondary" onClick={handleClose}>{t('modals.addChannel.cancel')}</Button>
-              <Button variant="primary" type="submit" disabled={formik.isSubmitting}>{t('modals.addChannel.add')}</Button>
+              {renderAddButton()}
             </div>
           </Form>
         </Modal.Body>

@@ -9,10 +9,9 @@ import gon from 'gon';
 import config from 'config';
 import runApp from './init.jsx';
 
-if (process.env.NODE_ENV !== 'production') {
-  localStorage.debug = 'chat:*';
-}
+// if (process.env.NODE_ENV !== 'production') {
+//   localStorage.debug = 'chat:*';
+// }
 
-console.log('gon', gon);
 console.log('config', config);
 runApp(gon);
