@@ -1,23 +1,19 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import {
-  ButtonGroup,
-  Button,
-} from 'react-bootstrap';
+import { ButtonGroup, Button } from 'react-bootstrap';
+import RemoveIcon from 'bootstrap-icons/icons/x-square.svg';
+import RenameIcon from 'bootstrap-icons/icons/pencil-square.svg';
 import { actions } from '../slices';
-import icons from '../icons';
 
 const Channels = () => {
-  const activeChannelId = useSelector((state) => state.channels.activeChannelId);
-  const channelsById = useSelector((state) => state.channels.byId);
-  const channelsIds = useSelector((state) => state.channels.allIds);
-  const channels = channelsIds.map((id) => channelsById[id]);
+  const activeChannelId = useSelector((state) => state.channelsInfo.activeChannelId);
+  const channels = useSelector((state) => state.channelsInfo.channels);
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
   const handleSetActiveChannel = (id) => () => {
-    dispatch(actions.setActiveIdOfChannel({ id }));
+    dispatch(actions.setActiveChannelId({ id }));
   };
   const handleShowRemoveModal = (channel) => () => {
     dispatch(actions.showModal({ type: 'removing', item: channel }));
@@ -55,14 +51,14 @@ const Channels = () => {
           variant={variant}
           onClick={handleShowRenameModal(channel)}
         >
-          {icons.renameIcon}
+          <RenameIcon />
         </Button>
         <Button
           className="flex-grow-0"
           variant={variant}
           onClick={handleShowRemoveModal(channel)}
         >
-          {icons.removeIcon}
+          <RemoveIcon />
         </Button>
       </ButtonGroup>
     );

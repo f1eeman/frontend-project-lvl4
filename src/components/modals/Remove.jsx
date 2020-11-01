@@ -1,42 +1,42 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { unwrapResult } from '@reduxjs/toolkit';
 import { Modal, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
+import routes from '../../routes.js';
 import { actions } from '../../slices';
 import Spinner from '../Spinner.jsx';
 
 const Remove = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { item: { id: removingId } } = useSelector((state) => state.modals);
-  const [show, setShow] = useState(true);
-  const [localState, setLocalState] = useState('pending');
+  const removingId = useSelector((state) => state.modalsInfo.item.id);
+  const removingProcessInfo = useSelector((state) => state.removingProcessInfo);
+  console.log(removingProcessInfo);
+  const show = true;
   const handleClose = () => {
     dispatch(actions.hideModal());
-    return setShow(false);
   };
   const handleRemoveChannel = (id) => async () => {
     try {
-      setLocalState('removing');
-      const resultAction = await dispatch(actions.asyncRemoveChannel({ id }));
-      unwrapResult(resultAction);
-      setLocalState('finished');
+      dispatch(actions.changeStatus({ status: 'removing' }));
+      await axios.delete(routes.channelPath(id));
       dispatch(actions.hideModal());
+      dispatch(actions.changeStatus({ status: 'finished' }));
     } catch (e) {
-      setLocalState('failed');
+      dispatch(actions.changeStatus({ status: 'failed' }));
       throw e;
     }
   };
   const renderRemoveButton = () => (
     <Button variant="danger" onClick={handleRemoveChannel(removingId)}>
-      {localState === 'removing' ? <Spinner text={(t('loading'))} /> : t('modals.removeChannel.remove')}
+      {removingProcessInfo.status === 'removing' ? <Spinner>{t('loading')}</Spinner> : t('modals.removeChannel.remove')}
     </Button>
   );
 
   const renderFeedBack = () => (
     <>
-      {localState === 'failed' && <div className="d-block mb-2 invalid-feedback">{t('networkError')}</div>}
+      {removingProcessInfo.status === 'failed' && <div className="d-block mb-2 invalid-feedback">{t('networkError')}</div>}
     </>
   );
 

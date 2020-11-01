@@ -1,25 +1,27 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { unwrapResult } from '@reduxjs/toolkit';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { Form, Modal, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import axios from 'axios';
+import routes from '../../routes.js';
 import { actions as slicesActions } from '../../slices';
 import Spinner from '../Spinner.jsx';
 
 const Rename = () => {
+  const channels = useSelector((state) => state.channelsInfo.channels);
+  const channelsNames = channels.map(({ name }) => name);
   const { t } = useTranslation();
-  const { item } = useSelector((state) => state.modals);
+  const item = useSelector((state) => state.modalsInfo.item);
   const dispatch = useDispatch();
   const inputRef = useRef();
   useEffect(() => {
     inputRef.current.select();
   }, []);
-  const [show, setShow] = useState(true);
+  const isOpenModal = true;
   const handleClose = () => {
     dispatch(slicesActions.hideModal());
-    return setShow(false);
   };
   const formik = useFormik({
     initialValues: {
@@ -29,14 +31,15 @@ const Rename = () => {
       body: Yup.string()
         .min(3, t('forms.length'))
         .max(15, t('forms.length'))
-        .required(t('forms.required')),
+        .required(t('forms.required'))
+        .notOneOf(channelsNames, t('forms.unique')),
     }),
     onSubmit: async (values, actions) => {
+      const path = routes.channelPath(item.id);
       try {
-        const resultAction = await dispatch(
-          slicesActions.asyncRenameChannel({ id: item.id, name: values.body }),
+        await axios.patch(
+          path, { data: { attributes: { name: values.body } } },
         );
-        unwrapResult(resultAction);
         dispatch(slicesActions.hideModal());
       } catch (e) {
         actions.setErrors({ body: t('networkError') });
@@ -47,7 +50,7 @@ const Rename = () => {
 
   const renderRenameButton = () => (
     <Button variant="primary" type="submit" disabled={formik.isSubmitting}>
-      {formik.isSubmitting ? <Spinner text={(t('loading'))} /> : t('modals.renameChannel.rename')}
+      {formik.isSubmitting ? <Spinner>{t('loading')}</Spinner> : t('modals.renameChannel.rename')}
     </Button>
   );
 
@@ -61,7 +64,7 @@ const Rename = () => {
 
   return (
     <>
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={isOpenModal} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>{t('modals.renameChannel.title')}</Modal.Title>
         </Modal.Header>

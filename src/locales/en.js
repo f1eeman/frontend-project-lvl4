@@ -25,9 +25,10 @@ const en = {
     forms: {
       required: 'this field must be required',
       length: 'there should be 3 to 15 characters',
+      unique: 'must be unique',
     },
     networkError: 'Something\'s has gone run. Please, try again',
-    loading: ' Loading',
+    loading: ' Loading...',
   },
 };
 

@@ -1,39 +1,20 @@
 /* eslint-disable no-param-reassign */
-import { omit, forIn, difference } from 'lodash';
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import routes from '../routes.js';
-
-const asyncAddMessage = createAsyncThunk('addMessage', async ({ activeChannelId, message }) => {
-  const path = routes.channelMessagesPath(activeChannelId);
-  await axios.post(path, { data: { attributes: message } });
-});
+import { createSlice } from '@reduxjs/toolkit';
 
 const messagesSlice = createSlice({
-  name: 'messages',
+  name: 'messagesInfo',
   initialState: {
-    byId: {},
-    allIds: [],
+    messages: [],
   },
   reducers: {
-    addMessage(state, { payload: { data: { id, attributes } } }) {
-      state.byId[id] = attributes;
-      state.allIds.push(id);
+    addMessage(state, { payload: { data: { attributes } } }) {
+      state.messages.push(attributes);
     },
-    deleteMessages(state, { payload: { data: { id } } }) {
-      const removableIds = [];
-      forIn(state.byId, (message) => {
-        if (message.channelId === id) {
-          removableIds.push(message.id);
-        }
-      });
-      state.byId = omit(state.byId, removableIds);
-      state.allIds = difference(state.allIds, removableIds);
+    deleteMessages(state, { payload: { data: { id: removableChannelId } } }) {
+      state.messages = state.messages.filter((message) => message.channelId !== removableChannelId);
     },
   },
 });
-
-export { asyncAddMessage };
 
 export const { addMessage, deleteMessages } = messagesSlice.actions;
 

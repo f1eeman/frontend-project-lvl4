@@ -1,19 +1,19 @@
 import React, { useContext, useEffect, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { unwrapResult } from '@reduxjs/toolkit';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import { useSelector } from 'react-redux';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { actions as slicesActions } from '../slices';
+import axios from 'axios';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import Context from '../Context.js';
 import Spinner from './Spinner.jsx';
+import routes from '../routes.js';
 
 const MessageForm = () => {
-  const { activeChannelId } = useSelector((state) => state.channels);
+  const activeChannelId = useSelector((state) => state.channelsInfo.activeChannelId);
   const { userName } = useContext(Context);
-  const dispatch = useDispatch();
   const { t } = useTranslation();
+  const inputRef = useRef(null);
   const formik = useFormik({
     initialValues: {
       body: '',
@@ -23,13 +23,11 @@ const MessageForm = () => {
     }),
     onSubmit: async (values, actions) => {
       const message = { author: userName, text: values.body };
+      const path = routes.channelMessagesPath(activeChannelId);
       try {
-        const resultAction = await dispatch(
-          slicesActions.asyncAddMessage({ activeChannelId, message }),
-        );
-        unwrapResult(resultAction);
-        actions.setSubmitting(false);
+        await axios.post(path, { data: { attributes: message } });
         actions.resetForm();
+        inputRef.current.focus();
       } catch (e) {
         actions.setErrors({ body: t('networkError') });
         throw e;
@@ -38,14 +36,14 @@ const MessageForm = () => {
     validateOnBlur: false,
     validateOnChange: false,
   });
-  const inputRef = useRef();
+
   useEffect(() => {
     inputRef.current.focus();
   }, [activeChannelId]);
 
   const renderButton = () => (
     <Button variant="primary" type="submit" disabled={formik.isSubmitting}>
-      {formik.isSubmitting ? <Spinner text={(t('loading'))} /> : t('chatField.submit')}
+      {formik.isSubmitting ? <Spinner>{t('loading')}</Spinner> : t('chatField.submit')}
     </Button>
   );
 

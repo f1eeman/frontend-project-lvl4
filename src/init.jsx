@@ -20,19 +20,13 @@ const runApp = (initState) => {
     captureUnhandledRejections: true,
   });
   const { channels, messages, currentChannelId } = initState;
-  const channelsById = channels.reduce((acc, channel) => ({ ...acc, [channel.id]: channel }), {});
-  const channelsIds = channels.map(({ id }) => id);
-  const messagesById = messages.reduce((acc, message) => ({ ...acc, [message.id]: message }), {});
-  const messagesIds = messages.map(({ id }) => id);
   const preloadedState = {
-    channels: {
-      byId: channelsById,
-      allIds: channelsIds,
+    channelsInfo: {
+      channels,
       activeChannelId: currentChannelId,
     },
-    messages: {
-      byId: messagesById,
-      allIds: messagesIds,
+    messagesInfo: {
+      messages,
     },
   };
   const store = configureStore({

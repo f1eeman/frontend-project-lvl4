@@ -1,24 +1,26 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { unwrapResult } from '@reduxjs/toolkit';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import React, { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Form, Modal, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import axios from 'axios';
+import routes from '../../routes.js';
 import { actions as slicesActions } from '../../slices';
 import Spinner from '../Spinner.jsx';
 
 const Add = () => {
+  const channels = useSelector((state) => state.channelsInfo.channels);
+  const channelsNames = channels.map(({ name }) => name);
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const inputRef = useRef();
   useEffect(() => {
     inputRef.current.focus();
   }, []);
-  const [show, setShow] = useState(true);
+  const show = true;
   const handleClose = () => {
     dispatch(slicesActions.hideModal());
-    return setShow(false);
   };
   const formik = useFormik({
     initialValues: {
@@ -28,15 +30,16 @@ const Add = () => {
       body: Yup.string()
         .min(3, t('forms.length'))
         .max(15, t('forms.length'))
-        .required(t('forms.required')),
+        .required(t('forms.required'))
+        .notOneOf(channelsNames, t('forms.unique')),
     }),
     onSubmit: async (values, actions) => {
-      const channel = { name: values.body };
+      const channelInfo = { name: values.body };
+      const path = routes.channelsPath();
       try {
-        const resultAction = await dispatch(slicesActions.asyncAddChannel({ channel }));
-        unwrapResult(resultAction);
-        actions.setSubmitting(false);
-        actions.resetForm();
+        await axios.post(
+          path, { data: { attributes: channelInfo } },
+        );
         dispatch(slicesActions.hideModal());
       } catch (e) {
         actions.setErrors({ body: t('networkError') });
@@ -47,7 +50,7 @@ const Add = () => {
 
   const renderAddButton = () => (
     <Button variant="primary" type="submit" disabled={formik.isSubmitting}>
-      {formik.isSubmitting ? <Spinner text={(t('loading'))} /> : t('modals.addChannel.add')}
+      {formik.isSubmitting ? <Spinner>{t('loading')}</Spinner> : t('modals.addChannel.add')}
     </Button>
   );
 

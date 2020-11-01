@@ -4,10 +4,8 @@ import Context from '../Context.js';
 
 const Messages = () => {
   const { userName } = useContext(Context);
-  const messagesIds = useSelector((state) => state.messages.allIds);
-  const messagesById = useSelector((state) => state.messages.byId);
-  const messages = messagesIds.map((id) => messagesById[id]);
-  const activeChannelId = useSelector((state) => state.channels.activeChannelId);
+  const messages = useSelector((state) => state.messagesInfo.messages);
+  const activeChannelId = useSelector((state) => state.channelsInfo.activeChannelId);
   const messagesOfActiveChannel = messages.filter(({ channelId }) => channelId === activeChannelId);
   const messagesBox = useRef(null);
 
@@ -29,11 +27,11 @@ const Messages = () => {
     }
     return (
       <>
-        {messagesOfActiveChannel.map((m) => (
-          <p key={m.id}>
-            <b>{m.author}</b>
+        {messagesOfActiveChannel.map((message) => (
+          <p key={message.id}>
+            <b>{message.author}</b>
             {':'}
-            {m.text}
+            {message.text}
           </p>
         ))}
       </>

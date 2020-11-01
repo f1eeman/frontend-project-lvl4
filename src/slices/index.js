@@ -3,33 +3,29 @@ import channelsReducer, {
   addChannel,
   removeChannel,
   renameChannel,
-  asyncAddChannel,
-  asyncRemoveChannel,
-  asyncRenameChannel,
-  setActiveIdOfChannel,
+  setActiveChannelId,
 } from './channels';
-import messagesReducer, { addMessage, deleteMessages, asyncAddMessage } from './messages';
+import messagesReducer, { addMessage, deleteMessages } from './messages';
 import modalsReducer, { showModal, hideModal } from './modals';
+import removingProcessReducer, { changeStatus } from './removingProcess';
 
 const actions = {
-  setActiveIdOfChannel,
+  setActiveChannelId,
   addChannel,
   removeChannel,
   renameChannel,
-  asyncAddChannel,
-  asyncRemoveChannel,
-  asyncRenameChannel,
   addMessage,
-  asyncAddMessage,
   deleteMessages,
   showModal,
   hideModal,
+  changeStatus,
 };
 
 const rootReducer = combineReducers({
-  channels: channelsReducer,
-  messages: messagesReducer,
-  modals: modalsReducer,
+  channelsInfo: channelsReducer,
+  messagesInfo: messagesReducer,
+  modalsInfo: modalsReducer,
+  removingProcessInfo: removingProcessReducer,
 });
 
 export { actions };
