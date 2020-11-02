@@ -4,28 +4,27 @@ import channelsReducer, {
   removeChannel,
   renameChannel,
   setActiveChannelId,
+  removeChannelFromServer,
 } from './channels';
 import messagesReducer, { addMessage, deleteMessages } from './messages';
 import modalsReducer, { showModal, hideModal } from './modals';
-import removingProcessReducer, { changeStatus } from './removingProcess';
 
 const actions = {
   setActiveChannelId,
   addChannel,
   removeChannel,
   renameChannel,
+  removeChannelFromServer,
   addMessage,
   deleteMessages,
   showModal,
   hideModal,
-  changeStatus,
 };
 
 const rootReducer = combineReducers({
   channelsInfo: channelsReducer,
   messagesInfo: messagesReducer,
   modalsInfo: modalsReducer,
-  removingProcessInfo: removingProcessReducer,
 });
 
 export { actions };

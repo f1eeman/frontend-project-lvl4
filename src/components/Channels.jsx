@@ -7,8 +7,7 @@ import RenameIcon from 'bootstrap-icons/icons/pencil-square.svg';
 import { actions } from '../slices';
 
 const Channels = () => {
-  const activeChannelId = useSelector((state) => state.channelsInfo.activeChannelId);
-  const channels = useSelector((state) => state.channelsInfo.channels);
+  const channelsInfo = useSelector((state) => state.channelsInfo);
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -23,7 +22,7 @@ const Channels = () => {
   };
 
   const renderSimpleButton = (channel) => {
-    const variant = channel.id === activeChannelId ? 'primary' : 'light';
+    const variant = channel.id === channelsInfo.activeChannelId ? 'primary' : 'light';
     return (
       <Button
         className="nav-link text-left btn-block mb-2"
@@ -36,7 +35,7 @@ const Channels = () => {
   };
 
   const renderDropdownButton = (channel) => {
-    const variant = channel.id === activeChannelId ? 'primary' : 'light';
+    const variant = channel.id === channelsInfo.activeChannelId ? 'primary' : 'light';
     return (
       <ButtonGroup className="d-flex mb-2">
         <Button
@@ -66,7 +65,7 @@ const Channels = () => {
 
   const renderChannelsList = () => (
     <ul className="nav flex-column nav-pills nav-fill">
-      {channels.map((channel) => (
+      {channelsInfo.channels.map((channel) => (
         <li key={channel.id} className="nav-item">
           {channel.removable ? renderDropdownButton(channel) : renderSimpleButton(channel)}
         </li>
@@ -75,21 +74,19 @@ const Channels = () => {
   );
 
   return (
-    <>
-      <div className="col-3 border-right">
-        <div className="d-flex mb-2">
-          <span>{t('channelListTitle')}</span>
-          <Button
-            className="ml-auto p-0"
-            variant="link"
-            onClick={() => dispatch(actions.showModal({ type: 'adding', item: null }))}
-          >
-            +
-          </Button>
-        </div>
-        {renderChannelsList()}
+    <div className="col-3 border-right">
+      <div className="d-flex mb-2">
+        <span>{t('channelListTitle')}</span>
+        <Button
+          className="ml-auto p-0"
+          variant="link"
+          onClick={() => dispatch(actions.showModal({ type: 'adding', item: null }))}
+        >
+          +
+        </Button>
       </div>
-    </>
+      {renderChannelsList()}
+    </div>
   );
 };
 

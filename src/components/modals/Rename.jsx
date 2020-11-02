@@ -10,22 +10,21 @@ import { actions as slicesActions } from '../../slices';
 import Spinner from '../Spinner.jsx';
 
 const Rename = () => {
+  const currentChannel = useSelector((state) => state.modalsInfo.item);
   const channels = useSelector((state) => state.channelsInfo.channels);
   const channelsNames = channels.map(({ name }) => name);
   const { t } = useTranslation();
-  const item = useSelector((state) => state.modalsInfo.item);
   const dispatch = useDispatch();
   const inputRef = useRef();
   useEffect(() => {
     inputRef.current.select();
   }, []);
-  const isOpenModal = true;
   const handleClose = () => {
     dispatch(slicesActions.hideModal());
   };
   const formik = useFormik({
     initialValues: {
-      body: item.name,
+      body: currentChannel.name,
     },
     validationSchema: Yup.object({
       body: Yup.string()
@@ -35,7 +34,7 @@ const Rename = () => {
         .notOneOf(channelsNames, t('forms.unique')),
     }),
     onSubmit: async (values, actions) => {
-      const path = routes.channelPath(item.id);
+      const path = routes.channelPath(currentChannel.id);
       try {
         await axios.patch(
           path, { data: { attributes: { name: values.body } } },
@@ -63,32 +62,30 @@ const Rename = () => {
   );
 
   return (
-    <>
-      <Modal show={isOpenModal} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>{t('modals.renameChannel.title')}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={formik.handleSubmit}>
-            <Form.Group>
-              <Form.Control
-                ref={inputRef}
-                name="body"
-                value={formik.values.body}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                disabled={formik.isSubmitting}
-              />
-            </Form.Group>
-            {renderFeedBack()}
-            <div className="d-flex justify-content-end">
-              <Button className="mr-2" variant="secondary" onClick={handleClose}>{t('modals.renameChannel.cancel')}</Button>
-              {renderRenameButton()}
-            </div>
-          </Form>
-        </Modal.Body>
-      </Modal>
-    </>
+    <Modal show onHide={handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>{t('modals.renameChannel.title')}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form onSubmit={formik.handleSubmit}>
+          <Form.Group>
+            <Form.Control
+              ref={inputRef}
+              name="body"
+              value={formik.values.body}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              disabled={formik.isSubmitting}
+            />
+          </Form.Group>
+          {renderFeedBack()}
+          <div className="d-flex justify-content-end">
+            <Button className="mr-2" variant="secondary" onClick={handleClose}>{t('modals.renameChannel.cancel')}</Button>
+            {renderRenameButton()}
+          </div>
+        </Form>
+      </Modal.Body>
+    </Modal>
   );
 };
 

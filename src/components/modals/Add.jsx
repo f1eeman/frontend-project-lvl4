@@ -18,7 +18,6 @@ const Add = () => {
   useEffect(() => {
     inputRef.current.focus();
   }, []);
-  const show = true;
   const handleClose = () => {
     dispatch(slicesActions.hideModal());
   };
@@ -63,32 +62,30 @@ const Add = () => {
   );
 
   return (
-    <>
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>{t('modals.addChannel.title')}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={formik.handleSubmit}>
-            <Form.Group>
-              <Form.Control
-                ref={inputRef}
-                name="body"
-                value={formik.values.body}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                disabled={formik.isSubmitting}
-              />
-            </Form.Group>
-            {renderFeedBack()}
-            <div className="d-flex justify-content-end">
-              <Button className="mr-2" variant="secondary" onClick={handleClose}>{t('modals.addChannel.cancel')}</Button>
-              {renderAddButton()}
-            </div>
-          </Form>
-        </Modal.Body>
-      </Modal>
-    </>
+    <Modal show onHide={handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>{t('modals.addChannel.title')}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form onSubmit={formik.handleSubmit}>
+          <Form.Group>
+            <Form.Control
+              ref={inputRef}
+              name="body"
+              value={formik.values.body}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              disabled={formik.isSubmitting}
+            />
+          </Form.Group>
+          {renderFeedBack()}
+          <div className="d-flex justify-content-end">
+            <Button className="mr-2" variant="secondary" onClick={handleClose}>{t('modals.addChannel.cancel')}</Button>
+            {renderAddButton()}
+          </div>
+        </Form>
+      </Modal.Body>
+    </Modal>
   );
 };
 
