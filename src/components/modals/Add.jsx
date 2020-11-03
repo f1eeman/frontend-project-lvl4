@@ -14,7 +14,7 @@ const Add = () => {
   const channelsNames = channels.map(({ name }) => name);
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const inputRef = useRef();
+  const inputRef = useRef(null);
   useEffect(() => {
     inputRef.current.focus();
   }, []);
@@ -30,6 +30,8 @@ const Add = () => {
         .min(3, t('forms.length'))
         .max(15, t('forms.length'))
         .required(t('forms.required'))
+        .trim(t('forms.withoutSpaces'))
+        .strict(true)
         .notOneOf(channelsNames, t('forms.unique')),
     }),
     onSubmit: async (values, actions) => {

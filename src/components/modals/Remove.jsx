@@ -9,30 +9,30 @@ import Spinner from '../Spinner.jsx';
 const Remove = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const removingId = useSelector((state) => state.modalsInfo.item.id);
-  const removingChannelInfo = useSelector((state) => state.channelsInfo.removingChannelInfo);
+  const { removingId, removeChannelStatus } = useSelector((state) => (
+    {
+      removingId: state.modalsInfo.item.id,
+      removeChannelStatus: state.channelsInfo.removeStatus,
+    }
+  ));
+  console.log(removeChannelStatus);
   const handleClose = () => {
     dispatch(actions.hideModal());
   };
   const handleRemoveChannel = (id) => async () => {
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const resultAction = await dispatch(actions.removeChannelFromServer({ id }));
-      unwrapResult(resultAction);
-      dispatch(actions.hideModal());
-    } catch (e) {
-      throw e;
-    }
+    const resultAction = await dispatch(actions.removeChannelFromServer({ id }));
+    unwrapResult(resultAction);
+    dispatch(actions.hideModal());
   };
   const renderRemoveButton = () => (
     <Button variant="danger" onClick={handleRemoveChannel(removingId)}>
-      {removingChannelInfo.status === 'removing' ? <Spinner>{t('loading')}</Spinner> : t('modals.removeChannel.remove')}
+      {removeChannelStatus === 'removing' ? <Spinner>{t('loading')}</Spinner> : t('modals.removeChannel.remove')}
     </Button>
   );
 
   const renderFeedBack = () => (
     <>
-      {removingChannelInfo.status === 'failed' && <div className="d-block mb-2 invalid-feedback">{t('networkError')}</div>}
+      {removeChannelStatus === 'failed' && <div className="d-block mb-2 invalid-feedback">{t('networkError')}</div>}
     </>
   );
 

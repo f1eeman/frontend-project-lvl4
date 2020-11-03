@@ -26,6 +26,7 @@ const en = {
       required: 'this field must be required',
       length: 'there should be 3 to 15 characters',
       unique: 'must be unique',
+      withoutSpaces: 'there should be no leading and trailing spaces',
     },
     networkError: 'Something\'s has gone run. Please, try again',
     loading: ' Loading...',

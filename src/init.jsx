@@ -9,7 +9,7 @@ import Context from './Context.js';
 import initI18n from './i18n.js';
 import reducer, { actions } from './slices';
 
-const runApp = (initState, config, socketIo) => {
+const runApp = (initState, config, socket) => {
   initI18n();
 
   // eslint-disable-next-line no-new
@@ -37,8 +37,6 @@ const runApp = (initState, config, socketIo) => {
   });
 
   store.dispatch(actions.setActiveChannelId({ id: currentChannelId }));
-
-  const socket = socketIo();
 
   socket.on('newMessage', ({ data }) => {
     store.dispatch(actions.addMessage({ data }));

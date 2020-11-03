@@ -10,8 +10,12 @@ import { actions as slicesActions } from '../../slices';
 import Spinner from '../Spinner.jsx';
 
 const Rename = () => {
-  const currentChannel = useSelector((state) => state.modalsInfo.item);
-  const channels = useSelector((state) => state.channelsInfo.channels);
+  const { currentChannel, channels } = useSelector((state) => (
+    {
+      currentChannel: state.modalsInfo.item,
+      channels: state.channelsInfo.channels,
+    }
+  ));
   const channelsNames = channels.map(({ name }) => name);
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -31,6 +35,8 @@ const Rename = () => {
         .min(3, t('forms.length'))
         .max(15, t('forms.length'))
         .required(t('forms.required'))
+        .trim(t('forms.withoutSpaces'))
+        .strict(true)
         .notOneOf(channelsNames, t('forms.unique')),
     }),
     onSubmit: async (values, actions) => {

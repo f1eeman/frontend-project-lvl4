@@ -11,5 +11,5 @@ import runApp from './init.jsx';
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
 }
-
-runApp(gon, config, io);
+const socket = io();
+runApp(gon, config, socket);

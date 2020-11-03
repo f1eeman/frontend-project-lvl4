@@ -4,8 +4,12 @@ import Context from '../Context.js';
 
 const Messages = () => {
   const { userName } = useContext(Context);
-  const messages = useSelector((state) => state.messagesInfo.messages);
-  const activeChannelId = useSelector((state) => state.channelsInfo.activeChannelId);
+  const { messages, activeChannelId } = useSelector((state) => (
+    {
+      messages: state.messagesInfo.messages,
+      activeChannelId: state.channelsInfo.activeChannelId,
+    }
+  ));
   const messagesOfActiveChannel = messages.filter(({ channelId }) => channelId === activeChannelId);
   const messagesBox = useRef(null);
 
@@ -21,22 +25,17 @@ const Messages = () => {
     return null;
   }, [messages]);
 
-  const renderMessages = () => {
-    if (messagesOfActiveChannel.length === 0) {
-      return null;
-    }
-    return (
-      <>
-        {messagesOfActiveChannel.map((message) => (
-          <p key={message.id}>
-            <b>{message.author}</b>
-            {':'}
-            {message.text}
-          </p>
-        ))}
-      </>
-    );
-  };
+  const renderMessages = () => (
+    <>
+      {messagesOfActiveChannel.map((message) => (
+        <p key={message.id}>
+          <b>{message.author}</b>
+          {':'}
+          {message.text}
+        </p>
+      ))}
+    </>
+  );
 
   return (
     <div id="messages-box" ref={messagesBox} className="chat-messages overflow-auto mb-3">

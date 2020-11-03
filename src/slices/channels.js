@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { get } from 'lodash';
 import axios from 'axios';
 import routes from '../routes.js';
 
@@ -14,9 +15,7 @@ const channelSlice = createSlice({
   initialState: {
     channels: [],
     activeChannelId: null,
-    removingChannelInfo: {
-      status: 'pending',
-    },
+    removeStatus: 'idle',
   },
   reducers: {
     addChannel(state, { payload: { data: { id, attributes } } }) {
@@ -24,19 +23,9 @@ const channelSlice = createSlice({
       state.activeChannelId = id;
     },
     removeChannel(state, { payload: { data: { id } } }) {
-      const changeActiveChannelId = () => {
-        if (state.channels.length === 0) {
-          state.activeChannelId = null;
-        } else {
-          const { channels } = state;
-          const firstChannel = channels[0];
-          state.activeChannelId = firstChannel.id;
-        }
-      };
-
       state.channels = state.channels.filter((channel) => channel.id !== id);
       if (state.activeChannelId === id) {
-        changeActiveChannelId();
+        state.activeChannelId = get(state.channels, '0.id', null);
       }
     },
     renameChannel(state, { payload: { data: { id, attributes } } }) {
@@ -53,13 +42,13 @@ const channelSlice = createSlice({
   },
   extraReducers: {
     [removeChannelFromServer.pending]: (state) => {
-      state.removingChannelInfo.status = 'removing';
+      state.removeStatus = 'removing';
     },
     [removeChannelFromServer.fulfilled]: (state) => {
-      state.removingChannelInfo.status = 'finished';
+      state.removeStatus = 'complete';
     },
     [removeChannelFromServer.rejected]: (state) => {
-      state.removingChannelInfo.status = 'failed';
+      state.removeStatus = 'failed';
     },
   },
 });
