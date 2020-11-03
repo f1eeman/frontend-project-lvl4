@@ -1,6 +1,7 @@
 // @ts-check
-
+import path from 'path';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 
 const isProduction = process.env.NODE_ENV === 'production';
 console.log('isProduction', isProduction);
@@ -25,6 +26,14 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin(),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, 'src/favicon.ico'),
+          to: path.resolve(__dirname, 'dist/public'),
+        },
+      ],
+    }),
   ],
   module: {
     rules: [

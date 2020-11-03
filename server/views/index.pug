@@ -3,6 +3,7 @@ html.h-100(lang="en")
   head
     title= Title
     link(href=assetPath('main.css') rel="stylesheet")
+    link(href=assetPath('favicon.ico') rel="icon")
     script.
       var gon = !{JSON.stringify(gon)};
       var config = !{JSON.stringify({ rollbar_client_token: process.env.ROLLBAR_TOKEN })};
