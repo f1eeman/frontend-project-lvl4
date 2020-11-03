@@ -15,7 +15,6 @@ const Remove = () => {
       removeChannelStatus: state.channelsInfo.removeStatus,
     }
   ));
-  console.log(removeChannelStatus);
   const handleClose = () => {
     dispatch(actions.hideModal());
   };
