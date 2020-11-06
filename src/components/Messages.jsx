@@ -3,18 +3,18 @@ import { useSelector } from 'react-redux';
 
 const Messages = () => {
   const activeChannelId = useSelector((state) => state.channelsInfo.activeChannelId);
-  const messagesOfActiveChannel = useSelector((state) => state.messagesInfo.messages.filter(
+  const messages = useSelector((state) => state.messagesInfo.messages.filter(
     ({ channelId }) => channelId === activeChannelId,
   ));
   const messagesBox = useRef(null);
 
   useEffect(() => {
     messagesBox.current.scrollTo(0, messagesBox.current.scrollHeight);
-  }, [messagesOfActiveChannel]);
+  }, [messages.length]);
 
   const renderMessages = () => (
     <>
-      {messagesOfActiveChannel.map((message) => (
+      {messages.map((message) => (
         <p key={message.id}>
           <b>{message.author}</b>
           {':'}
