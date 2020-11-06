@@ -1,29 +1,16 @@
-import React, { useEffect, useContext, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import Context from '../Context.js';
 
 const Messages = () => {
-  const { userName } = useContext(Context);
-  const { messages, activeChannelId } = useSelector((state) => (
-    {
-      messages: state.messagesInfo.messages,
-      activeChannelId: state.channelsInfo.activeChannelId,
-    }
+  const activeChannelId = useSelector((state) => state.channelsInfo.activeChannelId);
+  const messagesOfActiveChannel = useSelector((state) => state.messagesInfo.messages.filter(
+    ({ channelId }) => channelId === activeChannelId,
   ));
-  const messagesOfActiveChannel = messages.filter(({ channelId }) => channelId === activeChannelId);
   const messagesBox = useRef(null);
 
   useEffect(() => {
-    if (messagesOfActiveChannel.length === 0) {
-      return null;
-    }
-    const lastMessage = messagesOfActiveChannel[messagesOfActiveChannel.length - 1];
-    const { author: authorOfLastMessage } = lastMessage;
-    if (authorOfLastMessage === userName) {
-      messagesBox.current.scrollTo(0, messagesBox.current.scrollHeight);
-    }
-    return null;
-  }, [messages]);
+    messagesBox.current.scrollTo(0, messagesBox.current.scrollHeight);
+  }, [messagesOfActiveChannel]);
 
   const renderMessages = () => (
     <>

@@ -52,7 +52,6 @@ const runApp = (initState, config, socket) => {
 
   socket.on('removeChannel', ({ data }) => {
     store.dispatch(actions.removeChannel({ data }));
-    store.dispatch(actions.deleteMessages({ data }));
   });
 
   render(

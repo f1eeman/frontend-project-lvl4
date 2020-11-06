@@ -8,6 +8,7 @@ eslint no-param-reassign:["error", { "props": true, "ignorePropertyModifications
 */
 const removeChannelFromServer = createAsyncThunk('removeChannel', async ({ id }) => {
   await axios.delete(routes.channelPath(id));
+  return { id };
 });
 
 const channelSlice = createSlice({

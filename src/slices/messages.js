@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
+import { removeChannelFromServer } from './channels.js';
 
 const messagesSlice = createSlice({
   name: 'messagesInfo',
@@ -10,7 +11,9 @@ const messagesSlice = createSlice({
     addMessage(state, { payload: { data: { attributes } } }) {
       state.messages.push(attributes);
     },
-    deleteMessages(state, { payload: { data: { id: removableChannelId } } }) {
+  },
+  extraReducers: {
+    [removeChannelFromServer.fulfilled]: (state, { payload: { id: removableChannelId } }) => {
       state.messages = state.messages.filter((message) => message.channelId !== removableChannelId);
     },
   },
